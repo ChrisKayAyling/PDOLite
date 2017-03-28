@@ -73,14 +73,16 @@ class PDOLite
 
         try {
             $retVal = $this->db->query($query);
+            if ($retVal == FALSE) {
+                $this->error = TRUE;
+            } else {
+                $this->row_count = $retVal->rowCount();
+                return $retVal->fetchAll(\PDO::FETCH_ASSOC);
+            }
         } catch (\PDOException $PDOException) {
             $this->error = TRUE;
             return $PDOException;
         }
-
-        $this->row_count = $retVal->rowCount();
-
-        return $retVal->fetchAll(\PDO::FETCH_ASSOC);
 
     }
 
