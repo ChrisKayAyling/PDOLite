@@ -75,7 +75,7 @@ class PDOLite
             $retVal = $this->db->query($query);
             if ($retVal == FALSE) {
                 $this->error = TRUE;
-                return $retVal->errorInfo();
+                return $this->db->errorInfo();
             } else {
                 $this->row_count = $retVal->rowCount();
                 return $retVal->fetchAll(\PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ class PDOLite
 
     /**
      * @param $query
-     * @return bool|\Exception|\PDOException
+     * @return array|bool|\Exception|\PDOException
      */
     public function exec($query) {
         $this->error = FALSE;
@@ -100,7 +100,7 @@ class PDOLite
             $result = $this->db->exec($query);
             if ($result == FALSE) {
                 $this->error = TRUE;
-                return FALSE;
+                return $this->db->errorInfo();
             } else {
                 $this->last_insert_id = $this->db->lastInsertId();
                 $this->affected_rows = $result;
