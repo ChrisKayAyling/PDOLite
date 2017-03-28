@@ -1,0 +1,15 @@
+{
+    "name": "ck/PDOLite",
+    "description": "Data Layer Abstraction for MySQL",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Chris Kay-Ayling",
+            "email": "ck@xenn.co.uk"
+        }
+    ],
+
+    "autoload": {
+	"classmap": ["PDOLite.php"]
+    }
+}
