@@ -37,6 +37,8 @@ class PDOLite
     public $row_count = NULL;
     public $affected_rows = NULL;
 
+    public $error = NULL;
+
     public function __construct($Settings)
     {
         $this->host         = $Settings['DatabaseHost'];
@@ -47,10 +49,14 @@ class PDOLite
         $this->socket       = $Settings['DatabaseSocket'];
 
 
-        if (strlen($this->socket) > 0) {
-            $this->db = new \PDO('mysql:unix_socket=' . $this->socket . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
-        } else {
-            $this->db = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
+        try {
+            if (strlen($this->socket) > 0) {
+                $this->db = new \PDO('mysql:unix_socket=' . $this->socket . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
+            } else {
+                $this->db = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
+            }
+        } catch (\PDOException $e) {
+            return $e;
         }
 
     }
@@ -61,11 +67,14 @@ class PDOLite
      */
     public function query($query)
     {
+        $this->error = FALSE;
+
         $this->lastQuery = $query;
 
         try {
             $retVal = $this->db->query($query);
         } catch (\PDOException $PDOException) {
+            $this->error = TRUE;
             return $PDOException;
         }
 
@@ -80,11 +89,13 @@ class PDOLite
      * @return \Exception|\PDOException
      */
     public function exec($query) {
+        $this->error = FALSE;
         $this->lastQuery = $query;
 
         try {
             $result = $this->db->exec($query);
         } catch (\PDOException $PDOException) {
+            $this->error = TRUE;
             return $PDOException;
         }
 
