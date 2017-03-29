@@ -37,7 +37,14 @@ class PDOLite
     public $row_count = NULL;
     public $affected_rows = NULL;
 
+    /**
+     * @var null Error Flag
+     */
     public $error = NULL;
+    /**
+     * @var array Error Stack Information
+     */
+    public $errorInfo = array();
 
     public function __construct($Settings)
     {
@@ -61,9 +68,10 @@ class PDOLite
 
     }
 
+
     /**
      * @param $query
-     * @return array|\Exception|\PDOException
+     * @return array|bool
      */
     public function query($query)
     {
@@ -75,14 +83,16 @@ class PDOLite
             $retVal = $this->db->query($query);
             if ($retVal == FALSE) {
                 $this->error = TRUE;
-                return $this->db->errorInfo();
+                $this->errorInfo = $this->db->errorInfo();
+                return FALSE;
             } else {
                 $this->row_count = $retVal->rowCount();
                 return $retVal->fetchAll(\PDO::FETCH_ASSOC);
             }
         } catch (\PDOException $PDOException) {
             $this->error = TRUE;
-            return $PDOException;
+            $this->errorInfo = $PDOException;
+            return FALSE;
         }
 
     }
@@ -100,7 +110,8 @@ class PDOLite
             $result = $this->db->exec($query);
             if ($result == FALSE) {
                 $this->error = TRUE;
-                return $this->db->errorInfo();
+                $this->errorInfo = $this->db->errorInfo();
+                return FALSE;
             } else {
                 $this->last_insert_id = $this->db->lastInsertId();
                 $this->affected_rows = $result;
@@ -108,7 +119,8 @@ class PDOLite
             }
         } catch (\PDOException $PDOException) {
             $this->error = TRUE;
-            return $PDOException;
+            $this->errorInfo = $PDOException;
+            return FALSE;
         }
     }
 
