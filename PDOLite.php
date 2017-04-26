@@ -113,6 +113,8 @@ class PDOLite
             if ($result == FALSE) {
                 $this->error = TRUE;
                 $this->errorInfo = $this->db->errorInfo();
+                file_put_contents('/tmp/pdo.errors', $query, FILE_APPEND);
+                file_put_contents('/tmp/pdo.errors',$this->errorInfo, FILE_APPEND);
                 return FALSE;
             } else {
                 $this->last_insert_id = $this->db->lastInsertId();
