@@ -110,7 +110,7 @@ class PDOLite
 
         try {
             $result = $this->db->exec($query);
-            if ($result == FALSE) {
+            if ($result === FALSE) {
                 $this->error = TRUE;
                 $this->errorInfo = $this->db->errorInfo();
                 file_put_contents('/tmp/pdo.errors', $query, FILE_APPEND);
