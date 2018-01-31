@@ -63,6 +63,8 @@ class PDOLite
                 $this->db = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
             }
         } catch (\PDOException $e) {
+            $this->connected = false;
+            $this->error = $e->getMessage();
             return $e;
         }
 
