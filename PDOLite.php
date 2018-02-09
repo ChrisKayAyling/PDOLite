@@ -84,12 +84,11 @@ class PDOLite
 
         try {
             $retVal = $this->db->query($query);
+
             if ($retVal == FALSE) {
                 $this->error = TRUE;
                 $this->errorInfo = $this->db->errorInfo();
-                file_put_contents('/tmp/pdo.errors', $query, FILE_APPEND);
-                file_put_contents('/tmp/pdo.errors',$this->errorInfo, FILE_APPEND);
-                return FALSE;
+                die(var_Export($this->db->errorInfo(),true));
             } else {
                 $this->row_count = $retVal->rowCount();
                 return $retVal->fetchAll(\PDO::FETCH_ASSOC);
@@ -97,7 +96,7 @@ class PDOLite
         } catch (\PDOException $PDOException) {
             $this->error = TRUE;
             $this->errorInfo = $PDOException;
-            return FALSE;
+            throw $PDOException;
         }
 
     }
