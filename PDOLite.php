@@ -88,6 +88,7 @@ class PDOLite
             if ($retVal == FALSE) {
                 $this->error = TRUE;
                 $this->errorInfo = $this->db->errorInfo();
+                echo "Error in query: " . var_export($query,true) . "<br />";
                 die(var_Export($this->db->errorInfo(),true));
             } else {
                 $this->row_count = $retVal->rowCount();
