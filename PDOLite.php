@@ -57,7 +57,7 @@ class PDOLite
 
 
         try {
-            if (strlen($this->socket) > 0 && $this->socket !== 'DATABASE_SOCKET') {
+            if (is_array($this->socket) && !empty($this->socket)) {
                 $this->db = new \PDO('mysql:unix_socket=' . $this->socket . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
             } else {
                 $this->db = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8mb4', $this->user, $this->pass);
